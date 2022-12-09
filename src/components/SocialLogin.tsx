@@ -1,4 +1,4 @@
-import { Box, Button, Divider, HStack, Text } from "@chakra-ui/react";
+import { Box, Button, Divider, HStack, Text, VStack } from "@chakra-ui/react";
 import { FaGithub, FaComment } from "react-icons/fa";
 
 export default function SocialLogin() {
@@ -11,14 +11,14 @@ export default function SocialLogin() {
         </Text>
         <Divider />
       </HStack>
-      <HStack>
-        <Button leftIcon={<FaGithub />} colorScheme={"twitter"}>
+      <VStack>
+        <Button w={"100%"} leftIcon={<FaGithub />} colorScheme={"twitter"}>
           Continue with Github
         </Button>
-        <Button leftIcon={<FaComment />} colorScheme={"yellow"}>
+        <Button w={"100%"} leftIcon={<FaComment />} colorScheme={"yellow"}>
           Continue with Kakao
         </Button>
-      </HStack>
+      </VStack>
     </Box>
   );
 }
