@@ -10,15 +10,32 @@ import {
 } from "@chakra-ui/react";
 import { FaRegHeart, FaStar } from "react-icons/fa";
 
-export default function Room() {
+interface IRoomProps {
+  imageUrl: string;
+  rating: number;
+  price: number;
+  description: string;
+  category: string;
+}
+
+export default function Room({
+  imageUrl,
+  rating,
+  price,
+  description,
+  category,
+}: IRoomProps) {
   const gray = useColorModeValue("gray.600", "gray.300");
   return (
-    <VStack spacing={-0.3} alignItems={"flex-start"}>
+    <VStack
+      spacing={-0.3}
+      alignItems={{
+        sm: "center",
+        md: "flex-start",
+      }}
+    >
       <Box position={"relative"} rounded="2xl" overflow={"hidden"} mb={3}>
-        <Image
-          minH="240"
-          src="https://a0.muscache.com/im/pictures/prohost-api/Hosting-607458038229062130/original/1e20dfc7-ea12-44b2-a837-2bdcd8502133.jpeg?im_w=720"
-        />
+        <Image minW="260" maxW={"260"} h="240" src={imageUrl} />
         <Button
           variant={"unstyled"}
           position={"absolute"}
@@ -32,19 +49,19 @@ export default function Room() {
       <Box>
         <Grid gap={2} templateColumns={"6fr 1fr"}>
           <Text as={"b"} noOfLines={1} fontSize="md">
-            Ganggu-myeon,Yeongdeok-gun, 경상북도, 한국
+            {description}
           </Text>
           <HStack spacing={1}>
             <FaStar size={15} />
-            <Text>5.0</Text>
+            <Text>{rating}</Text>
           </HStack>
         </Grid>
         <Text fontSize={"sm"} color={gray}>
-          바다 전망
+          {category}
         </Text>
       </Box>
       <Text fontSize={"sm"} color={gray}>
-        <Text as="b">₩362,520</Text> / 박
+        <Text as="b">₩{price}</Text> / 박
       </Text>
     </VStack>
   );
