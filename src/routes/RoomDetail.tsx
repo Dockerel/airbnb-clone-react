@@ -136,7 +136,7 @@ export default function RoomDetail() {
           </Skeleton>
         </VStack>
         {isLoading ? (
-          ""
+          <></>
         ) : (
           <Avatar
             name={data?.owner.name}
@@ -146,7 +146,7 @@ export default function RoomDetail() {
         )}
       </HStack>
       {isLoading ? (
-        ""
+        <></>
       ) : (
         <Box mt={10} pb={200}>
           <Heading mb={5} fontSize={"2xl"}>
