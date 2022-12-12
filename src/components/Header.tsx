@@ -12,9 +12,10 @@ import {
 import LoginModal from "./Loginmodal";
 import { FaAirbnb, FaMoon, FaSun } from "react-icons/fa";
 import SignUpModal from "./SignUpModal";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 export default function Header() {
+  const location = useLocation().pathname;
   const {
     isOpen: isLoginOpen,
     onClose: onLoginClose,
@@ -32,7 +33,7 @@ export default function Header() {
     <Stack
       justifyContent={"space-between"}
       py={5}
-      px={40}
+      px={location === "/" ? 40 : 80}
       alignItems="center"
       direction={{
         sm: "column",

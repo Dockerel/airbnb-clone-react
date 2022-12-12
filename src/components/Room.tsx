@@ -39,7 +39,13 @@ export default function Room({
         }}
       >
         <Box position={"relative"} rounded="2xl" overflow={"hidden"} mb={3}>
-          <Image minW="260" maxW={"260"} h="240" src={imageUrl} />
+          <Image
+            minW="300"
+            maxW="300"
+            h="300"
+            src={imageUrl}
+            objectFit={"cover"}
+          />
           <Button
             variant={"unstyled"}
             position={"absolute"}
@@ -50,7 +56,7 @@ export default function Room({
             <FaRegHeart size="20px" />
           </Button>
         </Box>
-        <Box>
+        <Box w={"300px"}>
           <Grid gap={2} templateColumns={"6fr 1fr"}>
             <Text as={"b"} noOfLines={1} fontSize="md">
               {description}
