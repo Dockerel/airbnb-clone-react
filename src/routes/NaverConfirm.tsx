@@ -17,12 +17,12 @@ export default function NaverConfirm() {
     if (code && state === sessionState) {
       const status = await naverLogIn(code, sessionState!);
       if (status === 200) {
-        sessionStorage.removeItem("nState");
         toast({
           status: "success",
           title: "Welcome!",
           description: "Happy to have you back!",
         });
+        sessionStorage.removeItem("nState");
         // 빠르게 header를 바꿔주기 위함
         queryClient.refetchQueries(["me"]);
         // redirect to home
