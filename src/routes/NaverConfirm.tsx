@@ -17,7 +17,6 @@ export default function NaverConfirm() {
     if (code && state === sessionState) {
       const status = await naverLogIn(code, sessionState!);
       if (status === 200) {
-        console.log("progressed");
         toast({
           status: "success",
           title: "Welcome!",
