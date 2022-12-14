@@ -2,9 +2,9 @@ import { Heading, Spinner, Text, useToast, VStack } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { githubLogIn } from "../api";
+import { naverLogIn } from "../api";
 
-export default function GithubConfirm() {
+export default function NaverConfirm() {
   const toast = useToast();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
@@ -12,9 +12,12 @@ export default function GithubConfirm() {
   const confirmLogin = async () => {
     const params = new URLSearchParams(search);
     const code = params.get("code");
-    if (code) {
-      const status = await githubLogIn(code);
+    const state = params.get("state");
+    const sessionState = sessionStorage.getItem("nState");
+    if (code && state === sessionState) {
+      const status = await naverLogIn(code, sessionState!);
       if (status === 200) {
+        sessionStorage.removeItem("nState");
         toast({
           status: "success",
           title: "Welcome!",

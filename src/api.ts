@@ -39,11 +39,38 @@ export const logOut = () =>
     })
     .then((response) => response.data);
 
+// backend로 code 전달
 export const githubLogIn = (code: string) =>
   instance
     .post(
       `/users/github`,
       { code },
+      {
+        headers: {
+          "X-CSRFToken": Cookie.get("csrftoken") || "",
+        },
+      }
+    )
+    .then((response) => response.status);
+
+export const kakaoLogIn = (code: string) =>
+  instance
+    .post(
+      `/users/kakao`,
+      { code },
+      {
+        headers: {
+          "X-CSRFToken": Cookie.get("csrftoken") || "",
+        },
+      }
+    )
+    .then((response) => response.status);
+
+export const naverLogIn = (code: string, state: string) =>
+  instance
+    .post(
+      `users/naver`,
+      { code, state },
       {
         headers: {
           "X-CSRFToken": Cookie.get("csrftoken") || "",
