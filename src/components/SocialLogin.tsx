@@ -12,7 +12,9 @@ export default function SocialLogin() {
   const date = new Date();
   const ntoHash = `${date.toString()}${Math.random()}`;
   const nStateToken = crypto.createHash("sha256").update(ntoHash).digest("hex");
-  sessionStorage.setItem("nState", nStateToken);
+  const naverButtonClick = () => {
+    sessionStorage.setItem("nState", nStateToken);
+  };
   const naverParams = {
     client_id: "PmuFLd8yrGcYQbeXXQkt",
     response_type: "code",
@@ -53,6 +55,7 @@ export default function SocialLogin() {
           w={"100%"}
           leftIcon={<FaComment />}
           colorScheme={"green"}
+          onClick={naverButtonClick}
         >
           Continue with Naver
         </Button>
