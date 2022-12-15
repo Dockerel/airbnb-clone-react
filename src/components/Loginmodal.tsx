@@ -10,30 +10,67 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  Text,
+  useToast,
   VStack,
 } from "@chakra-ui/react";
 import SocialLogin from "./SocialLogin";
 import { FaUserNinja, FaLock } from "react-icons/fa";
-import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import {
+  QueryClient,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
+import {
+  IUsernameLoginError,
+  IUsernameLoginSuccess,
+  IUsernameLoginVariables,
+  usernameLogIn,
+} from "../api";
 
 interface LoginModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
+interface IForm {
+  username: string;
+  password: string;
+}
+
 export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
-  const [username, setChangeUsername] = useState("");
-  const [password, setChangePassword] = useState("");
-  const onChange = (event: React.SyntheticEvent<HTMLInputElement>) => {
-    const { name, value } = event.currentTarget;
-    if (name === "username") {
-      setChangeUsername(value);
-    } else if (name === "password") {
-      setChangePassword(value);
-    }
-  };
-  const onSubmit = (event: React.SyntheticEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<IForm>();
+  const toast = useToast();
+  const queryClient = useQueryClient();
+  const mutation = useMutation<
+    IUsernameLoginSuccess,
+    IUsernameLoginError,
+    IUsernameLoginVariables
+  >(usernameLogIn, {
+    onMutate: () => {
+      console.log("mutation starting");
+    },
+    onSuccess: (data) => {
+      toast({
+        title: "Welcome back!",
+        status: "success",
+      });
+      onClose();
+      reset();
+      queryClient.refetchQueries(["me"]);
+    },
+    onError: (error) => {
+      console.log("mutation has an error");
+    },
+  });
+  const onSubmit = ({ username, password }: IForm) => {
+    mutation.mutate({ username, password });
   };
   return (
     <Modal onClose={onClose} isOpen={isOpen}>
@@ -41,7 +78,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
       <ModalContent>
         <ModalHeader>Log in</ModalHeader>
         <ModalCloseButton />
-        <ModalBody as={"form"} onSubmit={onSubmit as any}>
+        <ModalBody as={"form"} onSubmit={handleSubmit(onSubmit)}>
           <VStack>
             <InputGroup>
               <InputLeftElement
@@ -52,12 +89,11 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
                 }
               ></InputLeftElement>
               <Input
-                name="username"
-                onChange={onChange}
-                value={username}
+                isInvalid={Boolean(errors.username?.message)}
+                required
+                {...register("username", { required: true })}
                 variant={"filled"}
                 placeholder="Username"
-                required
               />
             </InputGroup>
             <InputGroup>
@@ -69,19 +105,29 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
                 }
               ></InputLeftElement>
               <Input
-                name="password"
-                onChange={onChange}
-                value={password}
+                isInvalid={Boolean(errors.password?.message)}
+                required
+                {...register("password", { required: true })}
                 variant={"filled"}
                 placeholder="Password"
                 type={"password"}
-                required
               />
             </InputGroup>
           </VStack>
-          <Button type="submit" marginTop={4} colorScheme={"red"} w="100%">
+          <Button
+            isLoading={mutation.isLoading}
+            type="submit"
+            marginTop={4}
+            colorScheme={"red"}
+            w="100%"
+          >
             Log in
           </Button>
+          {mutation.isError ? (
+            <Text color={"red.500"} textAlign="center" fontSize={"sm"} mt={5}>
+              Username or Password are wrong
+            </Text>
+          ) : null}
           <SocialLogin />
         </ModalBody>
       </ModalContent>
