@@ -1,5 +1,5 @@
 import { Heading, Spinner, Text, useToast, VStack } from "@chakra-ui/react";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { githubLogIn } from "../api";
@@ -9,22 +9,22 @@ export default function GithubConfirm() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { search } = useLocation();
-  const confirmLogin = async () => {
+  const mutation = useMutation(githubLogIn, {
+    onSuccess: () => {
+      toast({
+        title: "Welcome!",
+        status: "success",
+      });
+      queryClient.refetchQueries(["me"]);
+      navigate("/");
+    },
+  });
+
+  const confirmLogin = () => {
     const params = new URLSearchParams(search);
     const code = params.get("code");
     if (code) {
-      const status = await githubLogIn(code);
-      if (status === 200) {
-        toast({
-          status: "success",
-          title: "Welcome!",
-          description: "Happy to have you back!",
-        });
-        // 빠르게 header를 바꿔주기 위함
-        queryClient.refetchQueries(["me"]);
-        // redirect to home
-        navigate("/");
-      }
+      mutation.mutate(code);
     }
   };
   useEffect(() => {
