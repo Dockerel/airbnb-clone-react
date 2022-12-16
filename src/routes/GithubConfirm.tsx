@@ -10,20 +10,26 @@ export default function GithubConfirm() {
   const navigate = useNavigate();
   const { search } = useLocation();
   const mutation = useMutation(githubLogIn, {
+    onMutate: () => {
+      console.log("start mutate");
+    },
     onSuccess: () => {
       toast({
         title: "Welcome!",
         status: "success",
       });
+      console.log("mutate finished");
       queryClient.refetchQueries(["me"]);
       navigate("/");
     },
+    retry: false,
   });
 
   const confirmLogin = () => {
     const params = new URLSearchParams(search);
     const code = params.get("code");
     if (code) {
+      console.log(code);
       mutation.mutate(code);
     }
   };
