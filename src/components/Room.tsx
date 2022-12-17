@@ -8,8 +8,9 @@ import {
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react";
-import { FaRegHeart, FaStar } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import React from "react";
+import { FaCamera, FaRegHeart, FaStar } from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
 
 interface IRoomProps {
   imageUrl: string;
@@ -18,6 +19,7 @@ interface IRoomProps {
   description: string;
   category: string;
   pk: number;
+  isOwner: boolean;
 }
 
 export default function Room({
@@ -27,8 +29,14 @@ export default function Room({
   description,
   category,
   pk,
+  isOwner,
 }: IRoomProps) {
   const gray = useColorModeValue("gray.600", "gray.300");
+  const navigate = useNavigate();
+  const onCameraClick = (event: React.SyntheticEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    navigate(`/rooms/${pk}/photos`);
+  };
   return (
     <Link to={`/rooms/${pk}`}>
       <VStack
@@ -40,15 +48,32 @@ export default function Room({
       >
         <Box w={"100%"}>
           <Box position={"relative"} rounded="2xl" overflow={"hidden"} mb={3}>
-            <Image h={240} w={"100%"} src={imageUrl} objectFit={"cover"} />
+            {imageUrl !== undefined ? (
+              <Image h={240} w={"100%"} src={imageUrl} objectFit={"cover"} />
+            ) : (
+              <Box
+                backgroundColor={"gray.400"}
+                w={"100%"}
+                h={240}
+                display={"flex"}
+                justifyContent="center"
+                alignItems={"center"}
+              >
+                <Text fontSize={"20px"} as={"b"} color={"white"}>
+                  No Image
+                </Text>
+              </Box>
+            )}
+
             <Button
               variant={"unstyled"}
               position={"absolute"}
               top={0}
               right={0}
               color="white"
+              onClick={isOwner ? onCameraClick : undefined}
             >
-              <FaRegHeart size="20px" />
+              {isOwner ? <FaCamera size="20px" /> : <FaRegHeart size="20px" />}
             </Button>
           </Box>
           <Box w={"100%"}>

@@ -12,16 +12,24 @@ import {
   InputGroup,
   InputLeftAddon,
   Select,
+  Text,
   Textarea,
+  useToast,
   VStack,
 } from "@chakra-ui/react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { FaBed, FaDollarSign, FaToilet } from "react-icons/fa";
-import { getAmenities, getCategories } from "../api";
+import { useNavigate } from "react-router-dom";
+import {
+  getAmenities,
+  getCategories,
+  IUploadRoomVariables,
+  uploadRoom,
+} from "../api";
 import HostOnlyPage from "../components/HostOnlyPage";
 import ProtectedPage from "../components/ProtectedPage";
-import { IAmenity, ICategory } from "../types";
+import { IAmenity, ICategory, IRoomDetail } from "../types";
 
 interface IForm {
   name: string;
@@ -39,14 +47,28 @@ interface IForm {
 }
 
 export default function UploadRoom() {
-  const { register, watch } = useForm<IForm>();
-  console.log(watch());
+  const { register, handleSubmit } = useForm<IUploadRoomVariables>();
+  const toast = useToast();
+  const navigate = useNavigate();
+  const mutation = useMutation(uploadRoom, {
+    onSuccess: (data: IRoomDetail) => {
+      toast({
+        status: "success",
+        title: "Room created",
+      });
+      navigate(`rooms/${data.pk}`);
+    },
+  });
   const { data: amenities, isLoading: isAmenitiesLoading } = useQuery<
     IAmenity[]
   >(["amenities"], getAmenities);
   const { data: categories, isLoading: isCategoriesLoading } = useQuery<
     ICategory[]
   >(["categories"], getCategories);
+
+  const onSubmit = (data: IUploadRoomVariables) => {
+    mutation.mutate(data);
+  };
   return (
     <ProtectedPage>
       <HostOnlyPage>
@@ -60,7 +82,12 @@ export default function UploadRoom() {
         >
           <Container>
             <Heading textAlign={"center"}>Upload Room</Heading>
-            <VStack spacing={10} as="form" mt={5}>
+            <VStack
+              spacing={10}
+              as="form"
+              onSubmit={handleSubmit(onSubmit)}
+              mt={5}
+            >
               <FormControl>
                 <FormLabel>Name</FormLabel>
                 <Input {...register("name")} required type="text"></Input>
@@ -158,7 +185,16 @@ export default function UploadRoom() {
                   ))}
                 </Grid>
               </FormControl>
-              <Button colorScheme={"red"} size="lg" w="100%">
+              {mutation.isError ? (
+                <Text color={"red.500"}>Something went wrong</Text>
+              ) : null}
+              <Button
+                type="submit"
+                isLoading={mutation.isLoading}
+                colorScheme={"red"}
+                size="lg"
+                w="100%"
+              >
                 Upload Room
               </Button>
             </VStack>

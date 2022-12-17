@@ -39,10 +39,15 @@ export default function Home() {
         <Room
           key={room.pk}
           pk={room.pk}
-          imageUrl={room.photos[0].file}
+          isOwner={room.is_owner}
+          imageUrl={room.photos[0]?.file}
           rating={room.rating}
           price={room.price}
-          description={room.photos[0].description}
+          description={
+            room.photos[0]?.description !== undefined
+              ? room.photos[0].description
+              : "No room description"
+          }
           category={room.category.name}
         />
       ))}
