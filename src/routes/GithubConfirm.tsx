@@ -9,28 +9,34 @@ export default function GithubConfirm() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { search } = useLocation();
-  const mutation = useMutation(githubLogIn, {
-    onMutate: () => {
-      console.log("start mutate");
-    },
-    onSuccess: () => {
-      toast({
-        title: "Welcome!",
-        status: "success",
-      });
-      console.log("mutate finished");
-      queryClient.refetchQueries(["me"]);
-      navigate("/");
-    },
-    retry: false,
-  });
+  // const mutation = useMutation(githubLogIn, {
+  //   onMutate: () => {
+  //     console.log("start mutate");
+  //   },
+  //   onSuccess: () => {
+  //     toast({
+  //       title: "Welcome!",
+  //       status: "success",
+  //     });
+  //     queryClient.refetchQueries(["me"]);
+  //     navigate("/");
+  //   },
+  // });
 
-  const confirmLogin = () => {
+  const confirmLogin = async () => {
     const params = new URLSearchParams(search);
     const code = params.get("code");
     if (code) {
-      console.log(code);
-      mutation.mutate(code);
+      // mutation.mutate(code);
+      const status = await githubLogIn(code);
+      if (status === 200) {
+        toast({
+          title: "Welcome!",
+          status: "success",
+        });
+        queryClient.refetchQueries(["me"]);
+        navigate("/");
+      }
     }
   };
   useEffect(() => {

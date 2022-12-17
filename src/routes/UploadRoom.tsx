@@ -16,13 +16,31 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
 import { FaBed, FaDollarSign, FaToilet } from "react-icons/fa";
 import { getAmenities, getCategories } from "../api";
 import HostOnlyPage from "../components/HostOnlyPage";
 import ProtectedPage from "../components/ProtectedPage";
 import { IAmenity, ICategory } from "../types";
 
+interface IForm {
+  name: string;
+  country: string;
+  city: string;
+  price: number;
+  rooms: number;
+  toilets: number;
+  description: string;
+  address: string;
+  pet_friendly: boolean;
+  kind: string;
+  amenities: number[];
+  category: number;
+}
+
 export default function UploadRoom() {
+  const { register, watch } = useForm<IForm>();
+  console.log(watch());
   const { data: amenities, isLoading: isAmenitiesLoading } = useQuery<
     IAmenity[]
   >(["amenities"], getAmenities);
@@ -45,52 +63,67 @@ export default function UploadRoom() {
             <VStack spacing={10} as="form" mt={5}>
               <FormControl>
                 <FormLabel>Name</FormLabel>
-                <Input required type="text"></Input>
+                <Input {...register("name")} required type="text"></Input>
                 <FormHelperText>Write the name of your room.</FormHelperText>
               </FormControl>
               <FormControl>
                 <FormLabel>Country</FormLabel>
-                <Input required type="text"></Input>
+                <Input {...register("country")} required type="text"></Input>
               </FormControl>
               <FormControl>
                 <FormLabel>City</FormLabel>
-                <Input required type="text"></Input>
+                <Input {...register("city")} required type="text"></Input>
               </FormControl>
               <FormControl>
                 <FormLabel>Address</FormLabel>
-                <Input required type="text"></Input>
+                <Input {...register("address")} required type="text"></Input>
               </FormControl>
               <FormControl>
                 <FormLabel>Price</FormLabel>
                 <InputGroup>
                   <InputLeftAddon children={<FaDollarSign />} />
-                  <Input required type="number" min={0} />
+                  <Input
+                    {...register("price")}
+                    required
+                    type="number"
+                    min={0}
+                  />
                 </InputGroup>
               </FormControl>
               <FormControl>
                 <FormLabel>Rooms</FormLabel>
                 <InputGroup>
                   <InputLeftAddon children={<FaBed />} />
-                  <Input required type="number" min={0} />
+                  <Input
+                    {...register("rooms")}
+                    required
+                    type="number"
+                    min={0}
+                  />
                 </InputGroup>
               </FormControl>
               <FormControl>
                 <FormLabel>Toilets</FormLabel>
                 <InputGroup>
                   <InputLeftAddon children={<FaToilet />} />
-                  <Input required type="number" min={0} />
+                  <Input
+                    {...register("toilets")}
+                    required
+                    type="number"
+                    min={0}
+                  />
                 </InputGroup>
               </FormControl>
               <FormControl>
                 <FormLabel>Description</FormLabel>
-                <Textarea />
+                <Textarea {...register("description")} />
               </FormControl>
               <FormControl>
-                <Checkbox>Pet friendly</Checkbox>
+                <Checkbox {...register("pet_friendly")}>Pet friendly</Checkbox>
               </FormControl>
               <FormControl>
                 <FormLabel>Kind of room</FormLabel>
-                <Select placeholder="Choose a kind">
+                <Select {...register("kind")} placeholder="Choose a kind">
                   <option value="entire_place">Entire Place</option>
                   <option value="private_room">Private Room</option>
                   <option value="shared_room">Shared Room</option>
@@ -101,7 +134,7 @@ export default function UploadRoom() {
               </FormControl>
               <FormControl>
                 <FormLabel>Category</FormLabel>
-                <Select placeholder="Choose a kind">
+                <Select {...register("category")} placeholder="Choose a kind">
                   {categories?.map((category) => (
                     <option key={category.pk} value={category.pk}>
                       {category.name}
@@ -117,7 +150,9 @@ export default function UploadRoom() {
                 <Grid templateColumns={"1fr 1fr"} gap={5}>
                   {amenities?.map((amenity) => (
                     <Box key={amenity.pk}>
-                      <Checkbox>{amenity.name}</Checkbox>
+                      <Checkbox value={amenity.pk} {...register("amenities")}>
+                        {amenity.name}
+                      </Checkbox>
                       <FormHelperText>{amenity.description}</FormHelperText>
                     </Box>
                   ))}

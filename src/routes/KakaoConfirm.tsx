@@ -10,31 +10,43 @@ export default function KakaoConfirm() {
   const navigate = useNavigate();
   const { search } = useLocation();
 
-  const mutation = useMutation(kakaoLogIn, {
-    onMutate: () => {
-      console.log("start mutation");
-    },
-    onSuccess: () => {
-      toast({
-        status: "success",
-        title: "Welcome!",
-        description: "Happy to have you back!",
-      });
-      // 빠르게 header를 바꿔주기 위함
-      queryClient.refetchQueries(["me"]);
-      // redirect to home
-      navigate("/");
-    },
-    onError: (error) => {
-      console.log(error);
-    },
-  });
+  // const mutation = useMutation(kakaoLogIn, {
+  //   onMutate: () => {
+  //     console.log("start mutation");
+  //   },
+  //   onSuccess: () => {
+  //     toast({
+  //       status: "success",
+  //       title: "Welcome!",
+  //       description: "Happy to have you back!",
+  //     });
+  //     // 빠르게 header를 바꿔주기 위함
+  //     queryClient.refetchQueries(["me"]);
+  //     // redirect to home
+  //     navigate("/");
+  //   },
+  //   onError: (error) => {
+  //     console.log(error);
+  //   },
+  // });
 
   const confirmLogin = async () => {
     const params = new URLSearchParams(search);
     const code = params.get("code");
     if (code) {
-      mutation.mutate(code);
+      // mutation.mutate(code);
+      const status = await kakaoLogIn(code);
+      if (status === 200) {
+        toast({
+          status: "success",
+          title: "Welcome!",
+          description: "Happy to have you back!",
+        });
+        // 빠르게 header를 바꿔주기 위함
+        queryClient.refetchQueries(["me"]);
+        // redirect to home
+        navigate("/");
+      }
     }
   };
   useEffect(() => {
