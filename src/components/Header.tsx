@@ -19,7 +19,7 @@ import {
 import LoginModal from "./Loginmodal";
 import { FaAirbnb, FaMoon, FaSun } from "react-icons/fa";
 import SignUpModal from "./SignUpModal";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import useUser from "../lib/useUser";
 import { logOut } from "../api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -61,6 +61,7 @@ export default function Header() {
           description: "See you later!",
         });
         queryClient.refetchQueries(["me"]);
+        queryClient.refetchQueries(["rooms"]);
       }
     },
   });
