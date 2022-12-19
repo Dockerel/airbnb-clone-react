@@ -43,11 +43,7 @@ export default function Home() {
           imageUrl={room.photos[0]?.file}
           rating={room.rating}
           price={room.price}
-          description={
-            room.photos[0]?.description !== undefined
-              ? room.photos[0].description
-              : "No room description"
-          }
+          description={room.name}
           category={room.category.name}
         />
       ))}
