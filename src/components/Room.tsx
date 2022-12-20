@@ -9,7 +9,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import React from "react";
-import { FaCamera, FaRegHeart, FaStar } from "react-icons/fa";
+import { FaCamera, FaPencilAlt, FaRegHeart, FaStar } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 
 interface IRoomProps {
@@ -36,6 +36,10 @@ export default function Room({
   const onCameraClick = (event: React.SyntheticEvent<HTMLButtonElement>) => {
     event.preventDefault();
     navigate(`/rooms/${pk}/photos`);
+  };
+  const onPencilClick = (event: React.SyntheticEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    navigate(`/rooms/${pk}/modify`);
   };
   return (
     <Link to={`/rooms/${pk}`}>
@@ -64,17 +68,40 @@ export default function Room({
                 </Text>
               </Box>
             )}
-
-            <Button
-              variant={"unstyled"}
-              position={"absolute"}
-              top={0}
-              right={0}
-              color="white"
-              onClick={isOwner ? onCameraClick : undefined}
-            >
-              {isOwner ? <FaCamera size="20px" /> : <FaRegHeart size="20px" />}
-            </Button>
+            {isOwner ? (
+              <Box>
+                <Button
+                  variant={"unstyled"}
+                  position={"absolute"}
+                  top={0}
+                  right={10}
+                  color="white"
+                  onClick={onPencilClick}
+                >
+                  <FaPencilAlt size="20px" />
+                </Button>
+                <Button
+                  variant={"unstyled"}
+                  position={"absolute"}
+                  top={0}
+                  right={0}
+                  color="white"
+                  onClick={onCameraClick}
+                >
+                  <FaCamera size="20px" />
+                </Button>
+              </Box>
+            ) : (
+              <Button
+                variant={"unstyled"}
+                position={"absolute"}
+                top={0}
+                right={0}
+                color="white"
+              >
+                <FaRegHeart size="20px" />
+              </Button>
+            )}
           </Box>
           <Box w={"100%"}>
             <Grid gap={2} templateColumns={"6fr 1fr"}>
