@@ -48,6 +48,7 @@ export interface IRoomDetail extends IRoomList {
   owner: IRoomOwner;
   amenities: IAmenity[];
   rating: number;
+  id: number;
 }
 
 export interface ICategory {

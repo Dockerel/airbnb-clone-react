@@ -161,7 +161,10 @@ export default function UploadRoom() {
               </FormControl>
               <FormControl>
                 <FormLabel>Category</FormLabel>
-                <Select {...register("category")} placeholder="Choose a kind">
+                <Select
+                  {...register("category")}
+                  placeholder="Choose a category"
+                >
                   {categories?.map((category) => (
                     <option key={category.pk} value={category.pk}>
                       {category.name}

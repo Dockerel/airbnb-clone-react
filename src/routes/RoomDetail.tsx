@@ -37,7 +37,6 @@ export default function RoomDetail() {
       enabled: dates !== undefined,
     }
   );
-  console.log(checkBookingData, isCheckingBooking);
   return (
     <Box
       mt={10}

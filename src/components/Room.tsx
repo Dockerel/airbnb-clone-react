@@ -40,6 +40,7 @@ export default function Room({
   const onPencilClick = (event: React.SyntheticEvent<HTMLButtonElement>) => {
     event.preventDefault();
     navigate(`/rooms/${pk}/modify`);
+    window.location.reload();
   };
   return (
     <Link to={`/rooms/${pk}`}>
