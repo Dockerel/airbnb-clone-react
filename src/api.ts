@@ -67,7 +67,12 @@ export const kakaoLogIn = (code: string) =>
     )
     .then((response) => response.status);
 
-export const naverLogIn = (code: string, state: string) =>
+export interface naverLoginVariables {
+  code: string;
+  state: string | null;
+}
+
+export const naverLogIn = ({ code, state }: naverLoginVariables) =>
   instance
     .post(
       `users/naver`,

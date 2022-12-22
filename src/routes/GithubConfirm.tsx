@@ -9,39 +9,42 @@ export default function GithubConfirm() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { search } = useLocation();
-  // const mutation = useMutation(githubLogIn, {
-  //   onMutate: () => {
-  //     console.log("start mutate");
-  //   },
-  //   onSuccess: () => {
-  //     toast({
-  //       title: "Welcome!",
-  //       status: "success",
-  //     });
-  //     queryClient.refetchQueries(["me"]);
-  //     navigate("/");
-  //   },
-  // });
+  const mutation = useMutation(githubLogIn, {
+    onMutate: () => {
+      console.log("start mutate");
+    },
+    onSuccess: () => {
+      toast({
+        title: "Welcome!",
+        status: "success",
+      });
+      queryClient.refetchQueries(["me"]);
+      navigate("/");
+    },
+    onError: (error) => {
+      console.log(`error : ${error}`);
+    },
+  });
 
   const confirmLogin = async () => {
     const params = new URLSearchParams(search);
     const code = params.get("code");
     if (code) {
-      // mutation.mutate(code);
-      const status = await githubLogIn(code);
-      if (status === 200) {
-        toast({
-          title: "Welcome!",
-          status: "success",
-        });
-        queryClient.refetchQueries(["me"]);
-        navigate("/");
-      }
+      mutation.mutate(code);
+      // const status = await githubLogIn(code);
+      // if (status === 200) {
+      //   toast({
+      //     title: "Welcome!",
+      //     status: "success",
+      //   });
+      //   queryClient.refetchQueries(["me"]);
+      //   navigate("/");
+      // }
     }
   };
   useEffect(() => {
     confirmLogin();
-  });
+  }, []);
   return (
     <VStack justifyContent={"center"} mt={40}>
       <Heading>Processing log in...</Heading>
