@@ -4,6 +4,7 @@ import GithubConfirm from "./routes/GithubConfirm";
 import Home from "./routes/Home";
 import KakaoConfirm from "./routes/KakaoConfirm";
 import ModifyRoom from "./routes/ModifyRoom";
+import MyBookings from "./routes/MyBookings";
 import NaverConfirm from "./routes/NaverConfirm";
 import NotFound from "./routes/NotFound";
 import RoomDetail from "./routes/RoomDetail";
@@ -19,6 +20,10 @@ const router = createBrowserRouter([
       {
         path: "",
         element: <Home />,
+      },
+      {
+        path: "mybookings",
+        element: <MyBookings />,
       },
       {
         path: "rooms/upload",
