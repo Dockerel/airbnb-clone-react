@@ -1,7 +1,35 @@
-import { Box, Button, Grid, GridItem, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Grid,
+  GridItem,
+  Spinner,
+  Text,
+  useToast,
+} from "@chakra-ui/react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import { cancelBooking, getBookings } from "../api";
+import { IBooking } from "../types";
 
 export default function MyBookings() {
+  const { isLoading, data } = useQuery<IBooking[]>(["bookings"], getBookings);
+  const toast = useToast();
+  const queryClient = useQueryClient();
+  const mutation = useMutation(cancelBooking, {
+    onSuccess: () => {
+      toast({
+        status: "success",
+        title: "Successfully canceled!",
+        isClosable: true,
+      });
+      queryClient.refetchQueries(["bookings"]);
+    },
+  });
+  const onClick = (id: number) => {
+    mutation.mutate(id);
+  };
   return (
     <Box
       mt={10}
@@ -35,41 +63,65 @@ export default function MyBookings() {
         <GridItem as={"b"}>Check Out</GridItem>
         <GridItem as={"b"}>Available</GridItem>
       </Grid>
-      <Grid
-        templateColumns={"5fr 2fr 2fr 2fr 2fr 2fr"}
-        gap={3}
-        w={"100%"}
-        bgColor="white.200"
-        alignItems={"center"}
-        justifyItems="center"
-        borderTop={"1px solid rgb(190,190,190)"}
-        borderBottom={"1px solid rgb(190,190,190)"}
-        py={3}
-        mb={1}
-      >
-        <GridItem fontWeight={"400"} noOfLines={1}>
-          <Link to={"/"}>
-            <Text noOfLines={1} _hover={{ color: "red.500" }}>
-              [떼구루루 스테이] #황리단길 메인 # 첨성대 # 대릉원 # 안압지
-              [떼구루루 스테이] #황리단길 메인 # 첨성대 # 대릉원 # 안압지
-            </Text>
-          </Link>
-        </GridItem>
-        <GridItem fontWeight={"400"}>₩130000 / 박</GridItem>
-        <GridItem fontWeight={"400"}>5명</GridItem>
-        <GridItem fontWeight={"400"}>2022-12-27</GridItem>
-        <GridItem fontWeight={"400"}>2022-12-29</GridItem>
-        <GridItem
-          display={"flex"}
-          flexDirection={"column"}
+      {/* skeleton */}
+      {data?.map((booking) => (
+        <Grid
+          key={booking.id}
+          templateColumns={"5fr 2fr 2fr 2fr 2fr 2fr"}
+          gap={3}
+          w={"100%"}
+          bgColor="white.200"
           alignItems={"center"}
-          color={"red.500"}
-          fontWeight={"400"}
+          justifyItems="center"
+          borderTop={"1px solid rgb(190,190,190)"}
+          borderBottom={"1px solid rgb(190,190,190)"}
+          py={3}
+          mb={1}
         >
-          <Text>Available</Text>
-          <Button mt={2}>Cancel</Button>
-        </GridItem>
-      </Grid>
+          <GridItem fontWeight={"400"} noOfLines={1}>
+            <Link to={"/"}>
+              <Text noOfLines={1} _hover={{ color: "red.500" }}>
+                {booking.room.name}
+              </Text>
+            </Link>
+          </GridItem>
+          <GridItem fontWeight={"400"}>₩{booking.room.price} / 박</GridItem>
+          <GridItem fontWeight={"400"}>{booking.guests}명</GridItem>
+          <GridItem fontWeight={"400"}>{booking.check_in}</GridItem>
+          <GridItem fontWeight={"400"}>{booking.check_out}</GridItem>
+          {booking.not_canceled ? (
+            <GridItem
+              display={"flex"}
+              flexDirection={"column"}
+              alignItems={"center"}
+              color={"blue.500"}
+              fontWeight={"400"}
+            >
+              <Text>Available</Text>
+              <Button
+                onClick={() => onClick(booking.id)}
+                color={"red.500"}
+                mt={2}
+              >
+                Cancel
+              </Button>
+            </GridItem>
+          ) : (
+            <GridItem
+              display={"flex"}
+              flexDirection={"column"}
+              alignItems={"center"}
+              color={"red.500"}
+              fontWeight={"400"}
+            >
+              <Text>Canceled</Text>
+              <Button disabled mt={2}>
+                Cancel
+              </Button>
+            </GridItem>
+          )}
+        </Grid>
+      ))}
     </Box>
   );
 }
