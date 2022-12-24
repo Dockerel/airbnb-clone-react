@@ -56,7 +56,7 @@ export default function UploadRoom() {
         status: "success",
         title: "Room created",
       });
-      navigate(`rooms/${data.pk}`);
+      navigate(`/rooms/${data.id}`);
     },
   });
   const { data: amenities, isLoading: isAmenitiesLoading } = useQuery<

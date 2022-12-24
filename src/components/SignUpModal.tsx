@@ -21,6 +21,7 @@ import {
   FaEnvelope,
   FaUserSecret,
   FaCheck,
+  FaPhone,
 } from "react-icons/fa";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { signUp } from "../api";
@@ -32,6 +33,7 @@ interface SignUpModalProps {
 }
 interface IForm {
   name: string;
+  phone_nb: string;
   email: string;
   username: string;
   password: string;
@@ -66,12 +68,20 @@ export default function SignUpModal({ isOpen, onClose }: SignUpModalProps) {
   });
   const onSubmit = ({
     name,
+    phone_nb,
     email,
     username,
     password,
     password_check,
   }: IForm) => {
-    mutation.mutate({ name, email, username, password, password_check });
+    mutation.mutate({
+      name,
+      phone_nb,
+      email,
+      username,
+      password,
+      password_check,
+    });
   };
   return (
     <Modal onClose={onClose} isOpen={isOpen}>
@@ -93,6 +103,20 @@ export default function SignUpModal({ isOpen, onClose }: SignUpModalProps) {
                 {...register("name", { required: true })}
                 variant={"filled"}
                 placeholder="Name"
+              />
+            </InputGroup>
+            <InputGroup>
+              <InputLeftElement
+                children={
+                  <Box color={"gray.500"}>
+                    <FaPhone />
+                  </Box>
+                }
+              ></InputLeftElement>
+              <Input
+                {...register("phone_nb", { required: true })}
+                variant={"filled"}
+                placeholder="Phone Number"
               />
             </InputGroup>
             <InputGroup>

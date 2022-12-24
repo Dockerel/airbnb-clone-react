@@ -77,14 +77,14 @@ export interface IUser {
 }
 
 export interface IBooking {
+  check_in: string;
+  check_out: string;
+  guests: number;
   id: number;
+  kind: string;
+  not_canceled: boolean;
   room: {
     name: string;
     price: number;
   };
-  kind: string;
-  check_in: string;
-  check_out: string;
-  guests: number;
-  not_canceled: boolean;
 }

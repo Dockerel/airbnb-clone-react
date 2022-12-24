@@ -43,7 +43,7 @@ export default function Header() {
   const Icon = useColorModeValue(FaMoon, FaSun);
   const toast = useToast();
   const queryClient = useQueryClient();
-
+  const navigate = useNavigate();
   const toastId = useRef<ToastId>();
   const mutation = useMutation(logOut, {
     onMutate: () => {
@@ -60,9 +60,10 @@ export default function Header() {
           title: "Done!",
           description: "See you later!",
         });
-        queryClient.refetchQueries(["me"]);
-        queryClient.refetchQueries(["rooms"]);
       }
+      queryClient.refetchQueries(["me"]);
+      queryClient.refetchQueries(["rooms"]);
+      navigate("/");
     },
   });
 
@@ -115,7 +116,7 @@ export default function Header() {
               <MenuList>
                 {user?.is_host ? (
                   <>
-                    <Link to="/">
+                    <Link to="/manage-bookings">
                       <MenuItem>Manage bookings</MenuItem>
                     </Link>
                     <Link to="/rooms/upload">

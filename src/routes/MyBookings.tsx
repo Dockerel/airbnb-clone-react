@@ -1,14 +1,5 @@
-import {
-  Box,
-  Button,
-  Grid,
-  GridItem,
-  Spinner,
-  Text,
-  useToast,
-} from "@chakra-ui/react";
+import { Box, Button, Grid, GridItem, Text, useToast } from "@chakra-ui/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import { cancelBooking, getBookings } from "../api";
 import { IBooking } from "../types";
@@ -97,7 +88,7 @@ export default function MyBookings() {
               color={"blue.500"}
               fontWeight={"400"}
             >
-              <Text>Available</Text>
+              <Text as={"b"}>Available</Text>
               <Button
                 onClick={() => onClick(booking.id)}
                 color={"red.500"}
@@ -114,7 +105,7 @@ export default function MyBookings() {
               color={"red.500"}
               fontWeight={"400"}
             >
-              <Text>Canceled</Text>
+              <Text as={"b"}>Canceled</Text>
               <Button disabled mt={2}>
                 Cancel
               </Button>
