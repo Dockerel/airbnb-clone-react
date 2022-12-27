@@ -5,7 +5,10 @@ import { formatDate } from "./lib/utils";
 import { IBooking } from "./routes/RoomDetail";
 
 const instance = axios.create({
-  baseURL: "http://127.0.0.1:8000/api/v1/",
+  baseURL:
+    process.env.NODE_ENV === "development"
+      ? "http://127.0.0.1:8000/api/v1/"
+      : "https://airbnbclone-19rp.onrender.com/api/v1",
   withCredentials: true,
 });
 
