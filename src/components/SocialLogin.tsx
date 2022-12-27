@@ -4,7 +4,7 @@ import { FaGithub, FaComment } from "react-icons/fa";
 export default function SocialLogin() {
   const kakaoParams = {
     client_id: "838e513b4de83049d01044f314a822d5",
-    redirect_uri: "http://127.0.0.1:3000/social/kakao",
+    redirect_uri: "https://dobbybnb.xyz/social/kakao",
     response_type: "code",
   };
   const paramsK = new URLSearchParams(kakaoParams).toString();
@@ -28,7 +28,7 @@ export default function SocialLogin() {
   const naverParams = {
     client_id: "PmuFLd8yrGcYQbeXXQkt",
     response_type: "code",
-    redirect_uri: "http://127.0.0.1:3000/social/naver",
+    redirect_uri: "https://dobbybnb.xyz/social/naver",
     state: nStateToken,
   };
   const paramsN = new URLSearchParams(naverParams).toString();
