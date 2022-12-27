@@ -1,4 +1,3 @@
-import crypto from "crypto";
 import { Box, Button, Divider, HStack, Text, VStack } from "@chakra-ui/react";
 import { FaGithub, FaComment } from "react-icons/fa";
 
@@ -9,9 +8,20 @@ export default function SocialLogin() {
     response_type: "code",
   };
   const paramsK = new URLSearchParams(kakaoParams).toString();
-  const date = new Date();
-  const ntoHash = `${date.toString()}${Math.random()}`;
-  const nStateToken = crypto.createHash("sha256").update(ntoHash).digest("hex");
+
+  const generateRandomString = (num: number) => {
+    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    let result = "";
+    const charactersLength = characters.length;
+    for (let i = 0; i < num; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+
+    return result;
+  };
+
+  const nStateToken = generateRandomString(20);
+
   const naverButtonClick = () => {
     sessionStorage.setItem("nState", nStateToken);
   };
